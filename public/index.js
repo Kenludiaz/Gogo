@@ -1,9 +1,12 @@
 let btn = document.querySelector('.search-btn');
 
-const search = (e) => {
+const search = async (e) => {
     e.preventDefault();
-
-    console.log("Searching");
+    let search = document.querySelector('.search');
+    console.log(search.value);
+    let response = await fetch("/api");
+    let json = await response.json();
+    console.log(json);
 }
 
 btn.addEventListener('click', search);

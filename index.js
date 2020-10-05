@@ -15,11 +15,11 @@ app.listen(port, () => {
 
 app.get('/api', async (req, res) => {
     try {
-        const API_URL = `https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=IBM&interval=5min&apikey=${API_KEY}`;
+        const API_URL = `https://www.alphavantage.co/query?function=CURRENCY_EXCHANGE_RATE&from_currency=BTC&to_currency=CNY&apikey=${API_KEY}`;
         const data = await fetch(API_URL);
         const jsonData = await data.json();
-        // console.log(jsonData);
-
+        console.log(jsonData);
+        res.json(jsonData);
     }
     catch(e) {
         console.log(e);
