@@ -1,3 +1,4 @@
+const { response } = require('express');
 const express = require('express');
 const fetch = require('node-fetch')
 const app = express();
@@ -27,6 +28,16 @@ app.get('/api/:from/:to', async (req, res) => {
     catch(e) {
         console.log(e);
     }
+})
+app.get('./physical', async (req, res) => {
+    const response = await fetch('./physical_currency_list.csv')
+    const formatted = response.json();
+    res.json(formatted);
+})
+
+app.get('./digital', async (req, res) => {
+    const response = await fetch('./digital_currency_list.csv');
+    res.json(response);
 })
 
 

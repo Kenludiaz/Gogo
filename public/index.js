@@ -12,4 +12,23 @@ const search = async (e) => {
     console.log(json);
 }
 
-btn.addEventListener('click', search);
+
+
+//Creating lists
+
+const generateList = async () => {
+    
+    const physCurr = await fetch('./physical');
+    const physCurrJson = await physCurr.json();
+    
+    const digCurr = await fetch('./digital');
+    const digCurrJson = await digCurr.json();
+    
+    const data = {...digCurr, ...physCurr};
+    const table = data.split(',');
+    
+    console.log(table);
+    
+}
+
+btn.addEventListener('click', generateList);
