@@ -18,11 +18,12 @@ const search = async (e) => {
 
 const generateList = async () => {
     
-    const physCurr = await fetch('./physical');
+    const physCurr = await fetch('./physical_currency_list.csv');
     const physCurrJson = await physCurr.json();
-    
-    const digCurr = await fetch('./digital');
-    const digCurrJson = await digCurr.json();
+    console.log("Got Data.")
+    console.log(physCurrJson);
+    const digCurr = await fetch('./digital_currency_list.csv');
+    const digCurrJson = await digCurr.text();
     
     const data = {...digCurr, ...physCurr};
     const table = data.split(',');
