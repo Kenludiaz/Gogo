@@ -1,12 +1,11 @@
 let btn = document.querySelector('.search-btn');
 
 const search = async (e) => {
+    console.log(to , "  ", from);
     e.preventDefault();
-    let search = document.querySelector('.search');
-    let to = document.querySelector('.search').value;
-    // console.log(search.value);
+    let from = document.querySelector('#from').value;
+    let to = document.querySelector('#to').value;
 
-    let from = search.value;
     let response = await fetch(`/api/${from}/${to}`);
     let json = await response.json();
     console.log(json);
@@ -22,7 +21,7 @@ const generateList = async () => {
     const physText = await physCurr.text();
     const physArr = physText.split('\r\n').splice(1);
     const physData = physArr.map( item => item.split(','));
-    console.log(physData);
+    // console.log(physData);
 
     const digCurr = await fetch('./digital_currency_list.csv');
     const digText = await digCurr.text();
@@ -31,10 +30,24 @@ const generateList = async () => {
     // console.log(digCurrArr);
 
     const data = [...digData, ...physData];
-    const table = data
+    data.pop();
     
-    
-    
+    const currencyList = document.querySelectorAll('.currencyList');
+    // console.log(currencyList);
+
+    //Create elements based on data
+    //Append them to both elements on currencyList
+    data.forEach(element => {
+        let option = document.createElement('option');
+        option.value = element[1];
+        option.innerHTML = `${element[0]}, ${element[1]}`;
+        let optionTwo = document.createElement('option');
+        optionTwo.value = element[1];
+        optionTwo.innerHTML = `${element[0]}, ${element[1]}`;
+        currencyList[0].appendChild(option);
+        currencyList[1].appendChild(optionTwo);
+    });
+
 }
 
-generateList();
+generateList().catch(e => console.log(e));
