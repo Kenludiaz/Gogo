@@ -19,18 +19,22 @@ const search = async (e) => {
 const generateList = async () => {
     
     const physCurr = await fetch('./physical_currency_list.csv');
-    const physCurrText = await physCurr.text();
-    const physCurrArr = physCurrText.split('o');
-    console.log(physCurrText);
+    const physText = await physCurr.text();
+    const physArr = physText.split('\r\n').splice(1);
+    const physData = physArr.map( item => item.split(','));
+    console.log(physData);
 
     const digCurr = await fetch('./digital_currency_list.csv');
-    const digCurrJson = await digCurr.text();
+    const digText = await digCurr.text();
+    const digArr = digText.split('\r\n').splice(1);
+    const digData = digArr.map( item => item.split(','));
+    // console.log(digCurrArr);
+
+    const data = [...digData, ...physData];
+    const table = data
     
-    const data = {...digCurr, ...physCurr};
-    const table = data.split(',');
     
-    console.log(table);
     
 }
 
-btn.addEventListener('click', generateList);
+generateList();
