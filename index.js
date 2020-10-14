@@ -15,12 +15,12 @@ app.listen(port, () => {
     // else console.log("Is Defined.")
 })
 
-app.get('/api/:from/:to', async (req, res) => {
-    console.log("Got")
+app.get('/api/:from-:to', async (req, res) => {
     const from = req.params.from;
     const to = req.params.to;
+    // console.log(from, to);
     const API_URL = `https://www.alphavantage.co/query?function=CURRENCY_EXCHANGE_RATE&from_currency=${from}&to_currency=${to}&apikey=${API_KEY}`;
-    
+    console.log(API_URL);
     const data = await fetch(API_URL);
     const jsonData = await data.json();
     console.log(jsonData);

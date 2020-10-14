@@ -1,16 +1,3 @@
-let btn = document.querySelector('.search-btn');
-
-const search = async (e) => {
-    console.log(to , "  ", from);
-    e.preventDefault();
-    let from = document.querySelector('#from').value;
-    let to = document.querySelector('#to').value;
-
-    let response = await fetch(`/api/${from}/${to}`);
-    let json = await response.json();
-    console.log(json);
-}
-
 
 
 //Creating lists
@@ -28,26 +15,45 @@ const generateList = async () => {
     const digArr = digText.split('\r\n').splice(1);
     const digData = digArr.map( item => item.split(','));
     // console.log(digCurrArr);
-
+    
     const data = [...digData, ...physData];
     data.pop();
     
     const currencyList = document.querySelectorAll('.currencyList');
     // console.log(currencyList);
-
+    
     //Create elements based on data
     //Append them to both elements on currencyList
     data.forEach(element => {
         let option = document.createElement('option');
-        option.value = element[1];
+        option.value = element[0];
         option.innerHTML = `${element[0]}, ${element[1]}`;
         let optionTwo = document.createElement('option');
-        optionTwo.value = element[1];
+        optionTwo.value = element[0];
         optionTwo.innerHTML = `${element[0]}, ${element[1]}`;
         currencyList[0].appendChild(option);
         currencyList[1].appendChild(optionTwo);
     });
-
+    
 }
 
 generateList().catch(e => console.log(e));
+
+
+
+// Adding api call to button
+let btn = document.querySelector('.search-btn');
+const search = async (e) => {
+    e.preventDefault();
+    let from = document.querySelector('#from').value;
+    let to = document.querySelector('#to').value;
+    // console.log(`${to}, ${from}`);
+
+    let response = await fetch(`/api/${from}-${to}`);
+    let results = await response.json();
+
+    let exchPrice = results["5. Exchange Rate"]
+    document.querySelector(".results").innerHTML = exchPrice;
+}
+
+btn.addEventListener('click', search);
