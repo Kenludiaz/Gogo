@@ -5,35 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="./index.js" defer></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.3/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css">
     <title>Gogo</title>
 </head>
 <body>
     <h1>Your most reliable site for currency exchange. </h1>
     
-    <div class="from-input">
+    <form class="from-input" autocomplete="off">
+        <div class="from-input">
+            <label for="from" class="from-label">From: </label>
+            <input name="from" id="from" class="currencyList">
+        </div>
 
-        <label for="currencyTypeFrom"> Type of Currency: </label>
-        <select name="currencyTypeFrom" id="currencyTypeFrom">
-            <option value="Digital">Digital</option>
-            <option value="Physical">Physical</option>
-        </select>
-        <label for="from" class="from-label">From: </label>
-        <select name="from" id="from" class="currencyList"></select>
 
-    </div>
-
-    <div class="to-input">
-        <label for="currencyTypeTo"> Type of Currency: </label>
-        <select name="currencyTypeTo" id="currencyTypeTo">
-            <option value="Digital">Digital</option>
-            <option value="Physical">Physical</option>
-        </select>
-        <label for="to" class="from-label">To:</label>
-        <select name="to" id="to" class="currencyList"></select>
-    </div>
+        <div class="to-input">
+            <label for="to" class="from-label">To:</label>
+            <input name="to" id="to" class="currencyList">
+        </div>
+        <button type="submit" class= "search-btn">Search</button>
+    </form>
     
 
-    <button type="submit" class= "search-btn">Search</button>
 
 
     <div class="results"></div>
