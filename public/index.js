@@ -17,16 +17,25 @@ digData.pop();
 const data = [...digData, ...physData];
 
 const currencyList = document.querySelectorAll('.currencyList');
-    // console.log(currencyList);
-    
-    //Create elements based on data
-    //Append them to both elements on currencyList
+
+
+/* I want users to type either a physical or digital currency
+    If it is a digital then he can only select a physical currency
+    1- start with having both list on both fields
+    1.5- If a text field is complete scan to see if it is digital,
+        if digital then filter the other text field
+    2- Put an onchange event handeler to see if both are digital currencies
+    3-if they are put an error message
+
+*/
+
+
 const generateList = async () => {
     physData.forEach(element => {
         let optionFrom = document.createElement('option');
         optionFrom.value = element[0];
         optionFrom.innerHTML = `${element[0]}, ${element[1]}`;
-        currencyList[0].appendChild(optionFrom);
+        currencyList.forEach( item => item.appendChild(optionFrom))
     });
 
     digData.forEach( element => {
@@ -34,50 +43,67 @@ const generateList = async () => {
         optionTo.value = element[0];
         optionTo.innerHTML = `${element[0]}, ${element[1]}`;
         currencyList[1].appendChild(optionTo);
-
+        currencyList.forEach( item => item.appendChild(optionTo))
     });
     
 }
 
 generateList().catch(e => console.log(e));
 
-const changeList = async () => {
-    let from = document.querySelector('#currencyTypeFrom');
-    let to = document.querySelector('#currencyTypeTo');
-
-    if (from.value == "digital") {
-        digData.forEach(element => {
-            let optionFrom = document.createElement('option');
-            optionFrom.value = element[0];
-            optionFrom.innerHTML = `${element[0]}, ${element[1]}`;
-            currencyList[0].appendChild(optionFrom);
-        });
-    }
-    else if (from.value == "physical") {
-        physData.forEach(element => {
-            let optionFrom = document.createElement('option');
-            optionFrom.value = element[0];
-            optionFrom.innerHTML = `${element[0]}, ${element[1]}`;
-            currencyList[0].appendChild(optionFrom);
-        });
-    }
-    else if (to.value == "digital") {
-        digData.forEach(element => {
-            let optionFrom = document.createElement('option');
-            optionFrom.value = element[0];
-            optionFrom.innerHTML = `${element[0]}, ${element[1]}`;
-            currencyList[1].appendChild(optionFrom);
-        });
-    }
-    else if (to.value == "physical") {
-        physData.forEach(element => {
-            let optionFrom = document.createElement('option');
-            optionFrom.value = element[0];
-            optionFrom.innerHTML = `${element[0]}, ${element[1]}`;
-            currencyList[1].appendChild(optionFrom);
-        });
+const checkInput = (currencyList) => {
+    if (currencyList.every( item => {
+        item in digData
+    }))
+    {
+        errorTxt = "[Error] Unable to convert two digital currencies.";
+        const span = document.createElement('span');
+        span.innerText = errorTxt;
+        span.color = "Red";
+        currencyList[1].borderBottom = "Red solid 5px";
+        currencyList.appendChild(span);
     }
 }
+
+currencyList.forEach(item => item.addEventListener('onchange', checkInput(currencyList)));
+
+
+// const changeList = async () => {
+//     let from = document.querySelector('#currencyTypeFrom');
+//     let to = document.querySelector('#currencyTypeTo');
+
+//     if (from.value == "digital") {
+//         digData.forEach(element => {
+//             let optionFrom = document.createElement('option');
+//             optionFrom.value = element[0];
+//             optionFrom.innerHTML = `${element[0]}, ${element[1]}`;
+//             currencyList[0].appendChild(optionFrom);
+//         });
+//     }
+//     else if (from.value == "physical") {
+//         physData.forEach(element => {
+//             let optionFrom = document.createElement('option');
+//             optionFrom.value = element[0];
+//             optionFrom.innerHTML = `${element[0]}, ${element[1]}`;
+//             currencyList[0].appendChild(optionFrom);
+//         });
+//     }
+//     else if (to.value == "digital") {
+//         digData.forEach(element => {
+//             let optionFrom = document.createElement('option');
+//             optionFrom.value = element[0];
+//             optionFrom.innerHTML = `${element[0]}, ${element[1]}`;
+//             currencyList[1].appendChild(optionFrom);
+//         });
+//     }
+//     else if (to.value == "physical") {
+//         physData.forEach(element => {
+//             let optionFrom = document.createElement('option');
+//             optionFrom.value = element[0];
+//             optionFrom.innerHTML = `${element[0]}, ${element[1]}`;
+//             currencyList[1].appendChild(optionFrom);
+//         });
+//     }
+// }
 
 let currencyTypeFrom = document.addEventListener('input', changeList);
 let currencyTypeTo = document.addEventListener('input', changeList);
@@ -93,7 +119,13 @@ const search = async (e) => {
     e.preventDefault();
     let from = document.querySelector('#from').value;
     let to = document.querySelector('#to').value;
-    // console.log(`${to}, ${from}`);
+    if (to in digData & from in physData)
+    {
+        //Need to add better error handeling
+        alert("Invalid API Call.")
+    }
+    
+    
     let response = await fetch(`/api/${from}-${to}`);
     let results = await response.json();
 
