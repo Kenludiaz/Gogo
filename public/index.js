@@ -29,26 +29,37 @@ const currencyList = document.querySelectorAll('.currencyList');
 
 */
 
+const fillBothList = () => {
+    autoComplete({
+        input: this,
+        fetch: function (text, update) {
+            text = text.toLowerCase();
 
-const generateList = async () => {
-    physData.forEach(element => {
-        let optionFrom = document.createElement('option');
-        optionFrom.value = element[0];
-        optionFrom.innerHTML = `${element[0]}, ${element[1]}`;
-        currencyList.forEach( item => item.appendChild(optionFrom))
-    });
-
-    digData.forEach( element => {
-        let optionTo = document.createElement('option');
-        optionTo.value = element[0];
-        optionTo.innerHTML = `${element[0]}, ${element[1]}`;
-        currencyList[1].appendChild(optionTo);
-        currencyList.forEach( item => item.appendChild(optionTo))
-    });
-    
+            let suggestions = data.filter( n => n[1].toLowerCase().startsWith(text));
+            update(suggestions);
+        },
+        onSelect: function(item) {
+            input.value = item.label;
+        }
+    })
 }
 
-generateList().catch(e => console.log(e));
+const fillPhysList = () => {
+    autoComplete({
+        input: this,
+        fetch: function (text, update) {
+            text = text.toLowerCase();
+
+            let suggestions = physData.filter( n => n[1].toLowerCase().startsWith(text));
+            update(suggestions);
+        },
+        onSelect: function(item) {
+            input.value = item.label;
+        }
+    })
+}
+
+
 
 const checkInput = (currencyList) => {
     if (currencyList.every( item => {
@@ -65,50 +76,6 @@ const checkInput = (currencyList) => {
 }
 
 currencyList.forEach(item => item.addEventListener('onchange', checkInput(currencyList)));
-
-
-// const changeList = async () => {
-//     let from = document.querySelector('#currencyTypeFrom');
-//     let to = document.querySelector('#currencyTypeTo');
-
-//     if (from.value == "digital") {
-//         digData.forEach(element => {
-//             let optionFrom = document.createElement('option');
-//             optionFrom.value = element[0];
-//             optionFrom.innerHTML = `${element[0]}, ${element[1]}`;
-//             currencyList[0].appendChild(optionFrom);
-//         });
-//     }
-//     else if (from.value == "physical") {
-//         physData.forEach(element => {
-//             let optionFrom = document.createElement('option');
-//             optionFrom.value = element[0];
-//             optionFrom.innerHTML = `${element[0]}, ${element[1]}`;
-//             currencyList[0].appendChild(optionFrom);
-//         });
-//     }
-//     else if (to.value == "digital") {
-//         digData.forEach(element => {
-//             let optionFrom = document.createElement('option');
-//             optionFrom.value = element[0];
-//             optionFrom.innerHTML = `${element[0]}, ${element[1]}`;
-//             currencyList[1].appendChild(optionFrom);
-//         });
-//     }
-//     else if (to.value == "physical") {
-//         physData.forEach(element => {
-//             let optionFrom = document.createElement('option');
-//             optionFrom.value = element[0];
-//             optionFrom.innerHTML = `${element[0]}, ${element[1]}`;
-//             currencyList[1].appendChild(optionFrom);
-//         });
-//     }
-// }
-
-let currencyTypeFrom = document.addEventListener('input', changeList);
-let currencyTypeTo = document.addEventListener('input', changeList);
-
-
 
 
 
