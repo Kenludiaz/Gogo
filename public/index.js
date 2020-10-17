@@ -16,20 +16,7 @@ digData.pop();
 
 const data = [...digData, ...physData];
 
-const currencyList = document.querySelectorAll('.currencyList');
-
-
-/* I want users to type either a physical or digital currency
-    If it is a digital then he can only select a physical currency
-    1- start with having both list on both fields
-    1.5- If a text field is complete scan to see if it is digital,
-        if digital then filter the other text field
-    2- Put an onchange event handeler to see if both are digital currencies
-    3-if they are put an error message
-
-*/
-
-const fillBothList = () => {
+const fillBothList = (arr) => {
     autoComplete({
         input: this,
         fetch: function (text, update) {
@@ -44,12 +31,13 @@ const fillBothList = () => {
     })
 }
 
+
 const fillPhysList = () => {
     autoComplete({
         input: this,
         fetch: function (text, update) {
             text = text.toLowerCase();
-
+            
             let suggestions = physData.filter( n => n[1].toLowerCase().startsWith(text));
             update(suggestions);
         },
@@ -59,11 +47,43 @@ const fillPhysList = () => {
     })
 }
 
+const currencyList = document.querySelectorAll('.currencyList');
+
+function chooseAutoComplete() {
+    //See if either field is filled
+    //if so make the other field a phys auto complete
+    if (currencyList.every(x => x.value == null)) {
+        currencyList.forEach( item => item.addEventListener('input', fillBothList));
+    }
+    digField = currencyList.findIndex(x => x in digData);
+    elseif(digField >= 0) {
+        if (digField == 0) {
+            let otherIndex = 1;
+        }
+        else {
+            let otherIndex = 0;
+        }
+        currencyList[otherIndex].removeEventListener('input', fillBothList));
+        currencyList[otherIndex].addEventListener('input', fillPhysList);
+    }
+}
+currencyList.forEach( item => item.addEventListener('input', chooseAutoComplete));
+
+
+/* I want users to type either a physical or digital currency
+    If it is a digital then he can only select a physical currency
+    1- start with having both list on both fields
+    1.5- If a text field is complete scan to see if it is digital,
+        if digital then filter the other text field
+    2- Put an onchange event handeler to see if both are digital currencies
+    3-if they are put an error message
+
+*/
 
 
 const checkInput = (currencyList) => {
     if (currencyList.every( item => {
-        item in digData
+        item.value in digData || !(item.value in data)
     }))
     {
         errorTxt = "[Error] Unable to convert two digital currencies.";
