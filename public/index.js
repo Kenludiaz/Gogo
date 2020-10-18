@@ -1,7 +1,9 @@
 
 
 //Creating lists
-
+const getData = () => {
+    
+}
 const physCurr = fetch('./physical_currency_list.csv');
 const physText = physCurr.text();
 const physArr = physText.split('\r\n').splice(1);
