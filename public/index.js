@@ -1,22 +1,29 @@
 
 
 //Creating lists
-const getData = () => {
+const getPhysicalCurrencies = async () => {
+    const physCurr = await fetch('./physical_currency_list.csv');
+    const physText = await physCurr.text();
+    const physArr = physText.split('\r\n').splice(1);
+    const physData = physArr.map( item => item.split(','));
+    physData.pop();
     
+    return physData;
 }
-const physCurr = fetch('./physical_currency_list.csv');
-const physText = physCurr.text();
-const physArr = physText.split('\r\n').splice(1);
-const physData = physArr.map( item => item.split(','));
-physData.pop();
+const getDigitalCurrencies = async () => {
+    const digCurr = await fetch('./digital_currency_list.csv');
+    const digText = await digCurr.text();
+    const digArr = digText.split('\r\n').splice(1);
+    const digData = digArr.map( item => item.split(','));
+    digData.pop();
+    return digData;
+}
+const physData = getPhysicalCurrencies().then(item => console.log(item));
+const digData = getDigitalCurrencies();
 
-const digCurr = fetch('./digital_currency_list.csv');
-const digText = digCurr.text();
-const digArr = digText.split('\r\n').splice(1);
-const digData = digArr.map( item => item.split(','));
-digData.pop();
+const data = [digData, physData];
 
-const data = [...digData, ...physData];
+
 
 const currencyList = document.querySelectorAll('.currencyList');
 
