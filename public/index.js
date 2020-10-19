@@ -1,4 +1,4 @@
-
+import autoComplete from "autocompleter";
 
 //Creating lists
 const getPhysicalCurrencies = async () => {
@@ -42,27 +42,42 @@ const fillPhysList = () => {
         }
     })
 }
+const fillBothList = () => {
+    autoComplete({
+        input: this,
+        fetch: function (text, update) {
+            text = text.toLowerCase();
+
+            let suggestions = data.filter( n => n[1].toLowerCase().startsWith(text));
+            update(suggestions);
+        },
+        onSelect: function(item) {
+            input.value = item.label;
+        }
+    })
+}
 
 
 function chooseAutoComplete() {
     //See if either field is filled
     //if so make the other field a phys auto complete
-    digField = currencyList.findIndex(x => x in digData);
-
-    if (currencyList.every(x => x.value == null)) {
-        currencyList.forEach( item => item.addEventListener('input', fillBothList));
+    let digField;
+    for (let i = 0; i < currencyList.length; i++)
+    {
+        if (currencyList[i].value in digData)
+        {
+            digData = i;
+        } 
     }
-    else if(digField >= 0) {
-        let otherIndex;
-        if (digField == 0) {
-            otherIndex = 1;
-        }
-        else {
-            otherIndex = 0;
-        }
-        currencyList[otherIndex].removeEventListener('input', fillBothList);
-        currencyList[otherIndex].addEventListener('input', fillPhysList);
+    let otherIndex;
+    if (digField == 0) {
+        otherIndex = 1;
     }
+    else {
+        otherIndex = 0;
+    }
+    currencyList[otherIndex].removeEventListener('input', fillBothList);
+    currencyList[otherIndex].addEventListener('input', fillPhysList);
 }
 currencyList.forEach( item => item.addEventListener('input', chooseAutoComplete));
 
