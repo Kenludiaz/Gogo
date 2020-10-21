@@ -3,23 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script type="module" src="https://kraaden.github.io/autocomplete/autocomplete.js"></script>
-    <script type="module" src="./index.js" defer></script>
     <link rel="stylesheet" href="style.css">
     <title>Gogo</title>
+    <script src="https://kraaden.github.io/autocomplete/autocomplete.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://kraaden.github.io/autocomplete/autocomplete.css">
+    <script type="module"src="./index.js" defer></script>
 </head>
 <body>
     <h1>Your most reliable site for currency exchange. </h1>
     
     <form class="form" autocomplete="off">
+        <h2 class="form-type">Physical Currency Conversion</h2>
         <div class="from-input">
-            <label for="from" class="from-label">From: </label>
+            <label for="from" class="physical-input">From: </label>
             <input name="from" id="from" class="currencyList">
         </div>
 
 
         <div class="to-input">
-            <label for="to" class="from-label">To:</label>
+            <label for="to" class="physical-input">To:</label>
+            <input name="to" id="to" class="currencyList">
+        </div>
+        <button type="submit" class= "search-btn">Search</button>
+    </form>
+
+    <form class="form" autocomplete="off">
+        <h2 class="form-type">Digital to Physical Currency Conversion</h2>
+        <div class="from-input">
+            <label for="from" class="digital-input">From: </label>
+            <input name="from" id="from" class="currencyList">
+        </div>
+
+
+        <div class="to-input">
+            <label for="to" class="physical-input">To:</label>
+            <input name="to" id="to" class="currencyList">
+        </div>
+        <button type="submit" class= "search-btn">Search</button>
+    </form>
+
+    <form class="form" autocomplete="off">
+        <h2 class="form-type">Physical to Digital Currency Conversion</h2>
+        <div class="from-input">
+            <label for="from" class="physical-input">From: </label>
+            <input name="from" id="from" class="currencyList">
+        </div>
+
+
+        <div class="to-input">
+            <label for="to" class="digital-input">To:</label>
             <input name="to" id="to" class="currencyList">
         </div>
         <button type="submit" class= "search-btn">Search</button>

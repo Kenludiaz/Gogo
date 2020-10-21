@@ -1,5 +1,3 @@
-import autoComplete from "autocompleter";
-
 //Creating lists
 const getPhysicalCurrencies = async () => {
     const physCurr = await fetch('./physical_currency_list.csv');
@@ -18,88 +16,42 @@ const getDigitalCurrencies = async () => {
     digData.pop();
     return digData;
 }
-const physData = getPhysicalCurrencies().then(item => console.log(item));
-const digData = getDigitalCurrencies();
+const physicalCurrenciesList = getPhysicalCurrencies().then(item => console.log(item));
+const digitalCurrenciesList = getDigitalCurrencies();
 
-const data = [digData, physData];
+let digitalInputs = document.querySelectorAll('.digital-input');
+let physicalInputs = document.querySelectorAll('.physical-input');
 
-
-
-const currencyList = document.querySelectorAll('.currencyList');
-
-
-const fillPhysList = () => {
-    autoComplete({
-        input: this,
-        fetch: function (text, update) {
+digitalInputs.forEach( item => {
+    autocomplete({
+        input: item,
+        fetch: function(text, update) {
             text = text.toLowerCase();
-            
-            let suggestions = physData.filter( n => n[1].toLowerCase().startsWith(text));
+            // you can also use AJAX requests instead of preloaded data
+            var suggestions = digitalCurrenciesList.filter(n => n[1].toLowerCase().startsWith(text))
             update(suggestions);
         },
         onSelect: function(item) {
-            input.value = item.label;
+            input.value = item[0];
         }
     })
-}
-const fillBothList = () => {
-    autoComplete({
-        input: this,
-        fetch: function (text, update) {
+});
+physicalInputs.forEach( item => {
+    // console.log(item);
+    autocomplete({
+        input: item,
+        fetch: function(text, update) {
             text = text.toLowerCase();
-
-            let suggestions = data.filter( n => n[1].toLowerCase().startsWith(text));
+            // you can also use AJAX requests instead of preloaded data
+            var suggestions = physicalCurrenciesList.filter(n => n[1].toLowerCase().startsWith(text))
             update(suggestions);
         },
         onSelect: function(item) {
-            input.value = item.label;
+            input.value = item[0];
         }
     })
-}
+});
 
-
-function chooseAutoComplete() {
-    //See if either field is filled
-    //if so make the other field a phys auto complete
-    let digField;
-    for (let i = 0; i < currencyList.length; i++)
-    {
-        if (currencyList[i].value in digData)
-        {
-            digData = i;
-        } 
-    }
-    let otherIndex;
-    if (digField == 0) {
-        otherIndex = 1;
-    }
-    else {
-        otherIndex = 0;
-    }
-    currencyList[otherIndex].removeEventListener('input', fillBothList);
-    currencyList[otherIndex].addEventListener('input', fillPhysList);
-}
-currencyList.forEach( item => item.addEventListener('input', chooseAutoComplete));
-
-
-
-
-
-const checkInput = (currencyList) => {
-    if (currencyList.every( item => {
-        item.value in digData
-    }))
-    {
-        errorTxt = "[Error] Unable to convert two digital currencies.";
-        const span = document.createElement('span');
-        span.innerText = errorTxt;
-        span.color = "Red";
-        currencyList[1].borderBottom = "Red solid 5px";
-        currencyList.appendChild(span);
-    }
-}
-
-// currencyList.forEach(item => item.addEventListener('onchange', checkInput(currencyList)));
 
 
 
@@ -122,7 +74,7 @@ const search = async (e) => {
 
 
     let exchPrice = results['Realtime Currency Exchange Rate']["5. Exchange Rate"];
-    text = exchPrice || "Invalid API Call, please select two physical currencies or one digital and one physical.";
+    text = exchPrice || "Unable to get data at this time.";
     if (text != undefined)
     {
         text = `The current exchange rate for these currencies is ${text}.`
