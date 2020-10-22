@@ -1,26 +1,33 @@
 //Creating lists
-const getPhysicalCurrencies = async () => {
+let physicalCurrenciesList = [];
+let digitalCurrenciesList = [];
+
+const getPhysicalCurrencies = async (physicalCurrenciesList) => {
     const physCurr = await fetch('./physical_currency_list.csv');
     const physText = await physCurr.text();
     const physArr = physText.split('\r\n').splice(1);
     const physData = physArr.map( item => item.split(','));
     physData.pop();
-    
+    physData.forEach(item => physicalCurrenciesList.push(item));
     return physData;
 }
-const getDigitalCurrencies = async () => {
+
+const getDigitalCurrencies = async (digitalCurrenciesList) => {
     const digCurr = await fetch('./digital_currency_list.csv');
     const digText = await digCurr.text();
     const digArr = digText.split('\r\n').splice(1);
     const digData = digArr.map( item => item.split(','));
     digData.pop();
+    digData.forEach(item => digitalCurrenciesList.push(item));
     return digData;
 }
-const physicalCurrenciesList = getPhysicalCurrencies().then(item => console.log(item));
-const digitalCurrenciesList = getDigitalCurrencies();
+getDigitalCurrencies(digitalCurrenciesList).catch(e => console.log(e));
+getPhysicalCurrencies(physicalCurrenciesList).catch(e => console.log(e));
+// console.log(physicalCurrenciesList, digitalCurrenciesList);
 
-let digitalInputs = document.querySelectorAll('.digital-input');
-let physicalInputs = document.querySelectorAll('.physical-input');
+let digitalInputs = document.querySelectorAll('.digitalCurrencyInput');
+let physicalInputs = document.querySelectorAll('.physicalCurrencyInput');
+console.log(digitalInputs, physicalInputs);
 
 digitalInputs.forEach( item => {
     autocomplete({
