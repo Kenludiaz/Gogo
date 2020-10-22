@@ -1,3 +1,4 @@
+
 //Creating lists
 let physicalCurrenciesList = [];
 let digitalCurrenciesList = [];
@@ -27,11 +28,11 @@ getPhysicalCurrencies(physicalCurrenciesList).catch(e => console.log(e));
 
 let digitalInputs = document.querySelectorAll('.digitalCurrencyInput');
 let physicalInputs = document.querySelectorAll('.physicalCurrencyInput');
-console.log(digitalInputs, physicalInputs);
+// console.log(digitalInputs, physicalInputs);
 
-digitalInputs.forEach( item => {
+digitalInputs.forEach( inputElement => {
     autocomplete({
-        input: item,
+        input: inputElement,
         fetch: function(text, update) {
             text = text.toLowerCase();
             // you can also use AJAX requests instead of preloaded data
@@ -43,10 +44,10 @@ digitalInputs.forEach( item => {
         }
     })
 });
-physicalInputs.forEach( item => {
-    // console.log(item);
+
+physicalInputs.forEach( inputElement => {
     autocomplete({
-        input: item,
+        input: inputElement,
         fetch: function(text, update) {
             text = text.toLowerCase();
             // you can also use AJAX requests instead of preloaded data
@@ -59,7 +60,19 @@ physicalInputs.forEach( item => {
     })
 });
 
-
+autocomplete({
+    input: physicalInputs[0],
+    fetch: function(text, update) {
+        text = text.toLowerCase();
+        // you can also use AJAX requests instead of preloaded data
+        var suggestions = physicalCurrenciesList;
+        console.log(typeof(physicalCurrenciesList));
+        update(suggestions);
+    },
+    onSelect: function(item) {
+        alert("item");
+    }
+});
 
 
 
