@@ -1,105 +1,161 @@
-
 //Creating lists
 let physicalCurrenciesList = [];
 let digitalCurrenciesList = [];
 
 const getPhysicalCurrencies = async (physicalCurrenciesList) => {
-    const physCurr = await fetch('./physical_currency_list.csv');
-    const physText = await physCurr.text();
-    const physArr = physText.split('\r\n').splice(1);
-    const physData = physArr.map( item => item.split(','));
-    physData.pop();
-    physData.forEach(item => physicalCurrenciesList.push(item));
-    return physData;
-}
+  const physCurr = await fetch("./physical_currency_list.csv");
+  const physText = await physCurr.text();
+  const physArr = physText.split("\r\n").splice(1);
+  const physData = physArr.map((item) => item.split(","));
+  physData.pop();
+  physData.forEach((item) => physicalCurrenciesList.push(item));
+  return physData;
+};
 
 const getDigitalCurrencies = async (digitalCurrenciesList) => {
-    const digCurr = await fetch('./digital_currency_list.csv');
-    const digText = await digCurr.text();
-    const digArr = digText.split('\r\n').splice(1);
-    const digData = digArr.map( item => item.split(','));
-    digData.pop();
-    digData.forEach(item => digitalCurrenciesList.push(item));
-    return digData;
-}
-getDigitalCurrencies(digitalCurrenciesList).catch(e => console.log(e));
-getPhysicalCurrencies(physicalCurrenciesList).catch(e => console.log(e));
+  const digCurr = await fetch("./digital_currency_list.csv");
+  const digText = await digCurr.text();
+  const digArr = digText.split("\r\n").splice(1);
+  const digData = digArr.map((item) => item.split(","));
+  digData.pop();
+  digData.forEach((item) => digitalCurrenciesList.push(item));
+  return digData;
+};
+getDigitalCurrencies(digitalCurrenciesList).catch((e) => console.log(e));
+getPhysicalCurrencies(physicalCurrenciesList).catch((e) => console.log(e));
 // console.log(physicalCurrenciesList, digitalCurrenciesList);
 
-let digitalInputs = document.querySelectorAll('.digitalCurrencyInput');
-let physicalInputs = document.querySelectorAll('.physicalCurrencyInput');
+let digitalInputs = document.querySelectorAll(".digitalCurrencyInput");
+let physicalInputs = document.querySelectorAll(".physicalCurrencyInput");
 // console.log(digitalInputs, physicalInputs);
 
-digitalInputs.forEach( inputElement => {
-    autocomplete({
-        input: inputElement,
-        fetch: function(text, update) {
-            text = text.toLowerCase();
-            // you can also use AJAX requests instead of preloaded data
-            var suggestions = digitalCurrenciesList.filter(n => n[1].toLowerCase().startsWith(text))
-            update(suggestions);
-        },
-        onSelect: function(item) {
-            input.value = item[0];
-        }
-    })
-});
-
-physicalInputs.forEach( inputElement => {
-    autocomplete({
-        input: inputElement,
-        fetch: function(text, update) {
-            text = text.toLowerCase();
-            // you can also use AJAX requests instead of preloaded data
-            var suggestions = physicalCurrenciesList.filter(n => n[1].toLowerCase().startsWith(text))
-            update(suggestions);
-        },
-        onSelect: function(item) {
-            input.value = item[0];
-        }
-    })
-});
-
-autocomplete({
-    input: physicalInputs[0],
-    fetch: function(text, update) {
-        text = text.toLowerCase();
-        // you can also use AJAX requests instead of preloaded data
-        var suggestions = physicalCurrenciesList;
-        console.log(typeof(physicalCurrenciesList));
-        update(suggestions);
-    },
-    onSelect: function(item) {
-        alert("item");
+function autocomplete(inp, arr) {
+  /*the autocomplete function takes two arguments,
+    the text field element and an array of possible autocompleted values:*/
+  var currentFocus;
+  /*execute a function when someone writes in the text field:*/
+  inp.addEventListener("input", function (e) {
+    var a,
+      b,
+      i,
+      val = this.value;
+    /*close any already open lists of autocompleted values*/
+    closeAllLists();
+    if (!val) {
+      return false;
     }
-});
-
-
-
-// Adding api call to button
-let btn = document.querySelector('.search-btn');
-const search = async (e) => {
-    e.preventDefault();
-    let from = document.querySelector('#from').value;
-    let to = document.querySelector('#to').value;
-    if (to in digData & from in physData)
-    {
-        //Need to add better error handeling
-        alert("Invalid API Call.")
+    currentFocus = -1;
+    /*create a DIV element that will contain the items (values):*/
+    a = document.createElement("DIV");
+    a.setAttribute("id", this.id + "autocomplete-list");
+    a.setAttribute("class", "autocomplete-items");
+    /*append the DIV element as a child of the autocomplete container:*/
+    this.parentNode.appendChild(a);
+    /*for each item in the array...*/
+    for (i = 0; i < arr.length; i++) {
+      /*check if the item starts with the same letters as the text field value:*/
+      if (arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {
+        /*create a DIV element for each matching element:*/
+        b = document.createElement("DIV");
+        /*make the matching letters bold:*/
+        b.innerHTML = "<strong>" + arr[i].substr(0, val.length) + "</strong>";
+        b.innerHTML += arr[i].substr(val.length);
+        /*insert a input field that will hold the current array item's value:*/
+        b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
+        /*execute a function when someone clicks on the item value (DIV element):*/
+        b.addEventListener("click", function (e) {
+          /*insert the value for the autocomplete text field:*/
+          inp.value = this.getElementsByTagName("input")[0].value;
+          /*close the list of autocompleted values,
+                (or any other open lists of autocompleted values:*/
+          closeAllLists();
+        });
+        a.appendChild(b);
+      }
     }
-    
-    
-    let response = await fetch(`/api/${from}-${to}`);
-    let results = await response.json();
-
-
-    let exchPrice = results['Realtime Currency Exchange Rate']["5. Exchange Rate"];
-    text = exchPrice || "Unable to get data at this time.";
-    if (text != undefined)
-    {
-        text = `The current exchange rate for these currencies is ${text}.`
+  });
+  /*execute a function presses a key on the keyboard:*/
+  inp.addEventListener("keydown", function (e) {
+    var x = document.getElementById(this.id + "autocomplete-list");
+    if (x) x = x.getElementsByTagName("div");
+    if (e.keyCode == 40) {
+      /*If the arrow DOWN key is pressed,
+          increase the currentFocus variable:*/
+      currentFocus++;
+      /*and and make the current item more visible:*/
+      addActive(x);
+    } else if (e.keyCode == 38) {
+      //up
+      /*If the arrow UP key is pressed,
+          decrease the currentFocus variable:*/
+      currentFocus--;
+      /*and and make the current item more visible:*/
+      addActive(x);
+    } else if (e.keyCode == 13) {
+      /*If the ENTER key is pressed, prevent the form from being submitted,*/
+      e.preventDefault();
+      if (currentFocus > -1) {
+        /*and simulate a click on the "active" item:*/
+        if (x) x[currentFocus].click();
+      }
     }
-    document.querySelector('.results').innerHTML = text;
+  });
+  function addActive(x) {
+    /*a function to classify an item as "active":*/
+    if (!x) return false;
+    /*start by removing the "active" class on all items:*/
+    removeActive(x);
+    if (currentFocus >= x.length) currentFocus = 0;
+    if (currentFocus < 0) currentFocus = x.length - 1;
+    /*add class "autocomplete-active":*/
+    x[currentFocus].classList.add("autocomplete-active");
+  }
+  function removeActive(x) {
+    /*a function to remove the "active" class from all autocomplete items:*/
+    for (var i = 0; i < x.length; i++) {
+      x[i].classList.remove("autocomplete-active");
+    }
+  }
+  function closeAllLists(elmnt) {
+    /*close all autocomplete lists in the document,
+      except the one passed as an argument:*/
+    var x = document.getElementsByClassName("autocomplete-items");
+    for (var i = 0; i < x.length; i++) {
+      if (elmnt != x[i] && elmnt != inp) {
+        x[i].parentNode.removeChild(x[i]);
+      }
+    }
+  }
+  /*execute a function when someone clicks in the document:*/
+  document.addEventListener("click", function (e) {
+    closeAllLists(e.target);
+  });
 }
 
-btn.addEventListener('click', search);
+physicalInputs.forEach((item) => autocomplete(item, physicalCurrenciesList));
+digitalInputs.forEach((item) => autocomplete(item, digitalCurrenciesList));
+
+// Adding api call to button
+let btn = document.querySelector(".search-btn");
+const search = async (e) => {
+  e.preventDefault();
+  let from = document.querySelector("#from").value;
+  let to = document.querySelector("#to").value;
+  if ((to in digData) & (from in physData)) {
+    //Need to add better error handeling
+    alert("Invalid API Call.");
+  }
+
+  let response = await fetch(`/api/${from}-${to}`);
+  let results = await response.json();
+
+  let exchPrice =
+    results["Realtime Currency Exchange Rate"]["5. Exchange Rate"];
+  text = exchPrice || "Unable to get data at this time.";
+  if (text != undefined) {
+    text = `The current exchange rate for these currencies is ${text}.`;
+  }
+  document.querySelector(".results").innerHTML = text;
+};
+
+btn.addEventListener("click", search);
