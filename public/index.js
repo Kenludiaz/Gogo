@@ -68,24 +68,6 @@ physicalInputs.forEach( inputElement => {
     })
 });
 
-
-
-// autocomplete({
-//   input: document.querySelector(".physicalCurrencyInput"),
-//   fetch: function(text, update) {
-//       text = text.toLowerCase();
-//       // you can also use AJAX requests instead of preloaded data
-//       var suggestions = physicalCurrenciesList.filter(n => n.label.toLowerCase().startsWith(text));
-//       console.log(physicalCurrenciesList);
-//       update(suggestions);
-//   },
-//   onSelect: function(item) {
-//     document.querySelector(".physicalCurrencyInput").value = item.label;
-//   }
-// });
-
-
-
 // Adding api call to button
 let btn = document.querySelector('.search-btn');
 const search = async (e) => {
