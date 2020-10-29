@@ -9,7 +9,12 @@ const getPhysicalCurrencies = async (physicalCurrenciesList) => {
     const physArr = physText.split('\r\n').splice(1);
     const physData = physArr.map( item => item.split(','));
     physData.pop();
-    physData.forEach(item => physicalCurrenciesList.push(item));
+    physData.forEach(item => {
+      physicalCurrenciesList.push({
+        value: item[0],
+        label: item[1]
+      })
+    });
     return physData;
 }
 
@@ -19,7 +24,12 @@ const getDigitalCurrencies = async (digitalCurrenciesList) => {
     const digArr = digText.split('\r\n').splice(1);
     const digData = digArr.map( item => item.split(','));
     digData.pop();
-    digData.forEach(item => digitalCurrenciesList.push(item));
+    digData.forEach(item => { 
+      digitalCurrenciesList.push({
+      value: item[0],
+      label: item[1]
+      })
+    });
     return digData;
 }
 getDigitalCurrencies(digitalCurrenciesList).catch(e => console.log(e));
@@ -35,12 +45,11 @@ digitalInputs.forEach( inputElement => {
         input: inputElement,
         fetch: function(text, update) {
             text = text.toLowerCase();
-            // you can also use AJAX requests instead of preloaded data
-            var suggestions = digitalCurrenciesList.filter(n => n[1].toLowerCase().startsWith(text))
+            var suggestions = digitalCurrenciesList.filter(n => n.label.toLowerCase().startsWith(text))
             update(suggestions);
         },
         onSelect: function(item) {
-            input.value = item[0];
+          inputElement.value = item.label;
         }
     })
 });
@@ -50,29 +59,30 @@ physicalInputs.forEach( inputElement => {
         input: inputElement,
         fetch: function(text, update) {
             text = text.toLowerCase();
-            // you can also use AJAX requests instead of preloaded data
-            var suggestions = physicalCurrenciesList.filter(n => n[1].toLowerCase().startsWith(text))
+            var suggestions = physicalCurrenciesList.filter(n => n.label.toLowerCase().startsWith(text));
             update(suggestions);
         },
         onSelect: function(item) {
-            input.value = item[0];
+            inputElement.value = item.label;
         }
     })
 });
 
-autocomplete({
-    input: physicalInputs[0],
-    fetch: function(text, update) {
-        text = text.toLowerCase();
-        // you can also use AJAX requests instead of preloaded data
-        var suggestions = physicalCurrenciesList;
-        console.log(typeof(physicalCurrenciesList));
-        update(suggestions);
-    },
-    onSelect: function(item) {
-        alert("item");
-    }
-});
+
+
+// autocomplete({
+//   input: document.querySelector(".physicalCurrencyInput"),
+//   fetch: function(text, update) {
+//       text = text.toLowerCase();
+//       // you can also use AJAX requests instead of preloaded data
+//       var suggestions = physicalCurrenciesList.filter(n => n.label.toLowerCase().startsWith(text));
+//       console.log(physicalCurrenciesList);
+//       update(suggestions);
+//   },
+//   onSelect: function(item) {
+//     document.querySelector(".physicalCurrencyInput").value = item.label;
+//   }
+// });
 
 
 
