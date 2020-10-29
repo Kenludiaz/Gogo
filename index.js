@@ -9,7 +9,6 @@ const autocomplete = require("autocompleter");
 
 const port = process.env.PORT || 3000;
 const API_KEY = process.env.KEY;
-
 app.listen(port, () => {
   console.log(`Listening at port ${port}. `);
   // if (API_KEY == undefined) console.log("Undefined");
